@@ -1,0 +1,13 @@
+# ignore node_modules
+node_modules/
+backend/node_modules/
+
+# ignore env files
+.env
+.env.local
+
+# next.js build
+.next
+
+# logs
+npm-debug.log*
