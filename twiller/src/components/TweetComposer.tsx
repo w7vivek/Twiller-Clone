@@ -6,7 +6,6 @@ import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Image, Smile, Calendar, MapPin, BarChart3, Globe } from "lucide-react";
 import { Separator } from "./ui/separator";
-import axios from "axios";
 import axiosInstance from "@/lib/axiosInstance";
 const TweetComposer = ({ onTweetPosted }: any) => {
   const { user } = useAuth();
@@ -45,7 +44,7 @@ const TweetComposer = ({ onTweetPosted }: any) => {
     const formdataimg = new FormData();
     formdataimg.set("image", image);
     try {
-      const res = await axios.post(
+      const res = await axiosInstance.post(
         "https://api.imgbb.com/1/upload?key=97f3fb960c3520d6a88d7e29679cf96f",
         formdataimg
       );

@@ -1,14 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "export",                 // REQUIRED
-  basePath: "/Twiller-Clone",        // repo name
+  output: "export",
+
+  // repo name
+  basePath: "/Twiller-Clone",
+
+  // VERY IMPORTANT for GitHub Pages
+  assetPrefix: "/Twiller-Clone/",
+
   images: {
-    unoptimized: true,              // REQUIRED for GitHub Pages
+    unoptimized: true,
   },
-  env: {
-    BACKEND_URL: "https://twiller-clone-pqr3.onrender.com",
-  },
+
   eslint: {
     ignoreDuringBuilds: true,
   },

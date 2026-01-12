@@ -8,7 +8,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import LoadingSpinner from "./loading-spinner";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosInstance";
 
 const Editprofile = ({ isopen, onclose }: any) => {
   const { user, updateProfile } = useAuth();
@@ -76,7 +76,7 @@ const Editprofile = ({ isopen, onclose }: any) => {
     const formdataimg = new FormData();
     formdataimg.set("image", image);
     try {
-      const res = await axios.post(
+      const res = await axiosInstance.post(
         "https://api.imgbb.com/1/upload?key=5562acec3a7c38503828a1bb59c2e215",
         formdataimg
       );
