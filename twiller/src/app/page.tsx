@@ -1,16 +1,16 @@
 import Landing from "@/components/Landing";
 import Mainlayout from "@/components/layout/Mainlayout";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
-import Image from "next/image";
+// import { useAuth } from "@/context/AuthContext";
+import {
+  setNotificationPreference,
+  getNotificationPreference,
+} from "@/lib/notification";
 
 export default function Home() {
 
   return (
-    <AuthProvider>
-      <Mainlayout>
-        {" "}
-        <Landing />
-      </Mainlayout>
-    </AuthProvider>
+    <Mainlayout>
+      <Landing />
+    </Mainlayout>
   );
 }

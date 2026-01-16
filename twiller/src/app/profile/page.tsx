@@ -25,12 +25,10 @@ export default function ProfilePage() {
   };
 
   return (
-    <div>
-      <h2>Notification Settings</h2>
-
-      <button onClick={toggleNotifications}>
-        {enabled ? "Disable Notifications" : "Enable Notifications"}
-      </button>
+    <div className="p-6">
+      <div className="bg-(--card) text-(--card-foreground) rounded-lg p-4">
+        Card content
+      </div>
     </div>
   );
 }

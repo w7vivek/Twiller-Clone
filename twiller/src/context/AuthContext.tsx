@@ -33,10 +33,15 @@ export interface User {
   email: string;
   website: string;
   location: string;
+
+  // 🔔 Notification settings
+  notificationsEnabled: boolean;
+  soundEnabled: boolean;
 }
 
 interface AuthContextType {
   user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>; // ✅ ADD THIS
   login: (email: string, password: string) => Promise<void>;
   signup: (
     email: string,
@@ -56,15 +61,10 @@ interface AuthContextType {
   googlesignin: () => Promise<void>;
 }
 
-/* ===============================
-   CONTEXT (🔥 FIXED)
-================================ */
-
-// IMPORTANT FIX: do NOT use `undefined`
 const AuthContext = createContext<AuthContextType>(null as any);
 
 /* ===============================
-   CUSTOM HOOK
+   HOOK
 ================================ */
 
 export function useAuth() {
@@ -76,7 +76,7 @@ export function useAuth() {
 }
 
 /* ===============================
-   PROVIDER (🔥 FIXED)
+   PROVIDER
 ================================ */
 
 export function AuthProvider({
@@ -131,10 +131,8 @@ export function AuthProvider({
       password
     );
 
-    const firebaseUser = userCred.user;
-
     const res = await axiosInstance.get("/loggedinuser", {
-      params: { email: firebaseUser.email },
+      params: { email: userCred.user.email },
     });
 
     if (res.data) {
@@ -162,15 +160,13 @@ export function AuthProvider({
       password
     );
 
-    const firebaseUser = userCred.user;
-
     const newUser = {
       username,
       displayName,
       avatar:
-        firebaseUser.photoURL ||
+        userCred.user.photoURL ||
         "https://images.pexels.com/photos/1139743/pexels-photo-1139743.jpeg",
-      email: firebaseUser.email,
+      email: userCred.user.email,
     };
 
     const res = await axiosInstance.post("/register", newUser);
@@ -202,27 +198,25 @@ export function AuthProvider({
     website: string;
     avatar: string;
   }) => {
-    if (!user) return;
+    if (!user && !isLoading) return;
 
     setIsLoading(true);
 
     const updatedUser: User = {
-      ...user,
+      ...user!,
       ...profileData,
     };
 
-    const res = await axiosInstance.patch(
-      `/userupdate/${user.email}`,
+    await axiosInstance.patch(
+      `/userupdate/${user!.email}`,
       updatedUser
     );
 
-    if (res.data) {
-      setUser(updatedUser);
-      localStorage.setItem(
-        "twitter-user",
-        JSON.stringify(updatedUser)
-      );
-    }
+    setUser(updatedUser);
+    localStorage.setItem(
+      "twitter-user",
+      JSON.stringify(updatedUser)
+    );
 
     setIsLoading(false);
   };
@@ -237,27 +231,25 @@ export function AuthProvider({
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
 
-      const firebaseUser = result.user;
-
-      if (!firebaseUser?.email) {
-        throw new Error("No email found in Google account");
+      if (!result.user.email) {
+        throw new Error("No email found");
       }
 
       let userData;
 
       try {
         const res = await axiosInstance.get("/loggedinuser", {
-          params: { email: firebaseUser.email },
+          params: { email: result.user.email },
         });
         userData = res.data;
       } catch {
         const newUser = {
-          username: firebaseUser.email.split("@")[0],
-          displayName: firebaseUser.displayName || "User",
+          username: result.user.email.split("@")[0],
+          displayName: result.user.displayName || "User",
           avatar:
-            firebaseUser.photoURL ||
+            result.user.photoURL ||
             "https://images.pexels.com/photos/1139743/pexels-photo-1139743.jpeg",
-          email: firebaseUser.email,
+          email: result.user.email,
         };
 
         const registerRes = await axiosInstance.post(
@@ -284,6 +276,7 @@ export function AuthProvider({
     <AuthContext.Provider
       value={{
         user,
+        setUser, // ✅ EXPOSE setUser
         login,
         signup,
         updateProfile,

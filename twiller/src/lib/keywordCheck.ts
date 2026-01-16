@@ -1,6 +1,7 @@
-export function containsImportantKeyword(text: string) {
-  const keywords = ["cricket", "science"];
-  return keywords.some(keyword =>
-    text.toLowerCase().includes(keyword)
+export const KEYWORDS = ["cricket", "science"];
+
+export function containsKeyword(text: string) {
+  return KEYWORDS.some(k =>
+    text.toLowerCase().includes(k)
   );
 }
