@@ -1,10 +1,11 @@
-import { playNotificationSound } from "./sounds";
+let audio: HTMLAudioElement | null = null;
 
 export function showTweetNotification(
   content: string,
   user: any
 ) {
   if (
+    typeof window !== "undefined" &&
     Notification.permission === "granted" &&
     user?.notificationsEnabled
   ) {
@@ -13,7 +14,13 @@ export function showTweetNotification(
     });
 
     if (user.soundEnabled) {
-      playNotificationSound();
+      try {
+        if (!audio) {
+          audio = new Audio("/AudioSounds/notification.wav");
+        }
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+      } catch {}
     }
   }
 }

@@ -143,7 +143,7 @@ export default function ProfilePage() {
                 alert("Notifications enabled ✅");
 
                 // optional: sync backend so state is correct
-                const res = await axios.put("/api/user/notification", {
+                const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/user/notifications`, {
                   enabled: true,
                   soundEnabled: user.soundEnabled,
                 });

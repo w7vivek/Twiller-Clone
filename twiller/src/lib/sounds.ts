@@ -1,8 +1,16 @@
-export function playNotificationSound() {
-  const audio = new Audio("../../public/sounds/notification.mp3");
-  audio.volume = 0.5;
+let audio: HTMLAudioElement | null = null;
 
-  audio.play().catch(() => {
-    // autoplay blocked — ignore safely
-  });
-}
+export const playSound = async () => {
+  try {
+    if (typeof window === "undefined") return;
+
+    if (!audio) {
+      audio = new Audio("/notification.mp3");
+    }
+
+    audio.currentTime = 0;
+    await audio.play();
+  } catch {
+    // Ignore AbortError safely
+  }
+};

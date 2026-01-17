@@ -1,11 +1,11 @@
-export function setNotificationPreference(enabled: boolean) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem("notificationsEnabled", JSON.stringify(enabled));
-}
+let audio: HTMLAudioElement | undefined;
 
-export function getNotificationPreference(): boolean {
-  if (typeof window === "undefined") return false;
-  return JSON.parse(
-    localStorage.getItem("notificationsEnabled") || "false"
-  );
-}
+export const playSound = async () => {
+  try {
+    if (!audio) {
+      audio = new Audio("/lib/AudioSounds/notification.wav");
+    }
+    audio.currentTime = 0;
+    await audio.play();
+  } catch {}
+};
