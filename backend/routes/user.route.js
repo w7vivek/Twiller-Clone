@@ -1,30 +1,39 @@
 import express from "express";
+import Tweet from "../models/tweet.js";
 import User from "../models/user.js";
 
 const router = express.Router();
 
-/* UPDATE NOTIFICATION SETTINGS */
-router.put("/notifications", async (req, res) => {
+/* CREATE TWEET */
+router.post("/post", async (req, res) => {
   try {
-    const { email, enabled, soundEnabled } = req.body;
+    const tweet = new Tweet(req.body);
+    await tweet.save();
 
-    const updatedUser = await User.findOneAndUpdate(
-      { email },
-      {
-        notificationsEnabled: enabled,
-        soundEnabled: soundEnabled,
-      },
-      { new: true }
+    const keywords = ["cricket", "science"];
+    const containsKeyword = keywords.some(word =>
+      tweet.content.toLowerCase().includes(word)
     );
 
-    if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
+    const author = await User.findById(tweet.author);
+
+    let triggerNotification = false;
+
+    if (
+      containsKeyword &&
+      author &&
+      author.notificationsEnabled
+    ) {
+      triggerNotification = true;
     }
 
-    res.json(updatedUser);
+    res.json({
+      tweet,
+      triggerNotification,
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Tweet creation failed" });
   }
 });
 
