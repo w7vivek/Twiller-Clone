@@ -141,14 +141,18 @@ export default function ProfilePage() {
 
               if (permission === "granted") {
                 alert("Notifications enabled ✅");
+                try {
+                  // optional: sync backend so state is correct
+                  const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/user/notifications`, {
+                    email: user.email,
+                    enabled: true,
+                    soundEnabled: user.soundEnabled,
+                  });
+                  setUser(res.data);
+                } catch (err) {
+                  console.error("Error updating notification settings:", err);
+                }
 
-                // optional: sync backend so state is correct
-                const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/user/notifications`, {
-                  enabled: true,
-                  soundEnabled: user.soundEnabled,
-                });
-
-                setUser(res.data);
               } else {
                 alert("Permission not granted ❌");
               }
