@@ -37,7 +37,7 @@ export default function Sidebar({ currentPage = 'home', onNavigate }: SidebarPro
   const navigation = [
     { name: 'Home', icon: Home, current: currentPage === 'home', page: 'home' },
     { name: 'Explore', icon: Search, current: currentPage === 'explore', page: 'explore' },
-    { name: 'Notifications', icon: Bell, current: currentPage === 'notifications', page: 'notifications', badge: true },
+    { name: 'Notification', icon: Bell, current: currentPage === 'notifications', page: 'notifications', badge: true },
     { name: 'Messages', icon: Mail, current: currentPage === 'messages', page: 'messages' },
     { name: 'Bookmarks', icon: Bookmark, current: currentPage === 'bookmarks', page: 'bookmarks' },
     { name: 'Profile', icon: User, current: currentPage === 'profile', page: 'profile' },

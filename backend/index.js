@@ -22,6 +22,23 @@ app.get("/", (req, res) => {
 
 /* ---------------- ROUTES ---------------- */
 app.use("/api/user", userRoutes);
+/* ---------------- Notification APIs ---------------- */
+app.get("/api/user/notifications", async (req, res) => {
+  try {
+    const { email } = req.query;
+    if (!email) return res.status(400).json({ error: "Email required" });
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    res.json({
+      notificationsEnabled: user.notificationsEnabled,
+      soundEnabled: user.soundEnabled
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 /* ---------------- DB CONNECTION ---------------- */
 const port = process.env.PORT || 5000;
