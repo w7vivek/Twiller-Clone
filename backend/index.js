@@ -5,7 +5,8 @@ import dotenv from "dotenv";
 
 import User from "./models/user.js";
 import Tweet from "./models/tweet.js";
-import userRoutes from "./routes/user.route.js";
+import userRoutes from "./routes/user.routes.js";
+import tweetRoutes from "./routes/tweet.routes.js";
 
 dotenv.config();
 
@@ -22,6 +23,8 @@ app.get("/", (req, res) => {
 
 /* ---------------- ROUTES ---------------- */
 app.use("/api/user", userRoutes);
+app.use("/api", tweetRoutes);
+
 /* ---------------- Notification APIs ---------------- */
 app.get("/api/user/notifications", async (req, res) => {
   try {

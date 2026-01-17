@@ -1,39 +1,61 @@
 import express from "express";
-import Tweet from "../models/tweet.js";
 import User from "../models/user.js";
 
 const router = express.Router();
 
-/* CREATE TWEET */
-router.post("/post", async (req, res) => {
+/* ================================
+   GET notification settings
+   GET /api/user/notifications
+================================ */
+router.get("/notifications", async (req, res) => {
   try {
-    const tweet = new Tweet(req.body);
-    await tweet.save();
+    const { email } = req.query;
 
-    const keywords = ["cricket", "science"];
-    const containsKeyword = keywords.some(word =>
-      tweet.content.toLowerCase().includes(word)
-    );
+    if (!email) {
+      return res.status(400).json({ message: "Email required" });
+    }
 
-    const author = await User.findById(tweet.author);
+    const user = await User.findOne({ email });
 
-    let triggerNotification = false;
-
-    if (
-      containsKeyword &&
-      author &&
-      author.notificationsEnabled
-    ) {
-      triggerNotification = true;
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
     res.json({
-      tweet,
-      triggerNotification,
+      notificationsEnabled: user.notificationsEnabled,
+      soundEnabled: user.soundEnabled,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Tweet creation failed" });
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/* ================================
+   UPDATE notification settings
+   PUT /api/user/notifications
+================================ */
+router.put("/notifications", async (req, res) => {
+  try {
+    const { email, enabled, soundEnabled } = req.body;
+
+    const updatedUser = await User.findOneAndUpdate(
+      { email },
+      {
+        notificationsEnabled: enabled,
+        soundEnabled: soundEnabled,
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
