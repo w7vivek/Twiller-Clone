@@ -3,7 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-import User from "./models/User.js";
+import User from "./models/user.js";
 import Tweet from "./models/tweet.js";
 import userRoutes from "./routes/user.route.js";
 
