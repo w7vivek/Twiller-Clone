@@ -5,8 +5,8 @@ import dotenv from "dotenv";
 
 import User from "./models/user.js";
 import Tweet from "./models/tweet.js";
-import userRoutes from "./routes/user.routes.js";
-import tweetRoutes from "./routes/tweet.routes.js";
+import userRoutes from "./routes/user.route.js";
+import tweetRoutes from "./routes/tweet.route.js";
 
 dotenv.config();
 
